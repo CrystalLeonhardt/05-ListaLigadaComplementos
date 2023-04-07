@@ -129,10 +129,17 @@ void inserirElemento()
 	{
 		primeiro = novo;
 	}
-	else
+	else 
 	{
-		// procura o final da lista
 		NO* aux = primeiro;
+		while (aux != NULL) {
+			if (aux->valor == novo->valor) {
+				cout << "Elemento Duplicado \n";
+				return;
+			}
+			aux = aux->prox;
+		}
+		// procura o final da lista
 		while (aux->prox != NULL) {
 			aux = aux->prox;
 		}
