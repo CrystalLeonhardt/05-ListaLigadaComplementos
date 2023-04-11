@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 using namespace std;
 
 // definicao de tipo
@@ -8,6 +8,7 @@ struct NO {
 };
 
 NO* primeiro = NULL;
+NO* maior = NULL;
 
 // headers
 void menu();
@@ -70,7 +71,7 @@ void menu()
 
 void inicializar()
 {
-	// se a lista j� possuir elementos
+	// se a lista já possuir elementos
 // libera a memoria ocupada
 	NO* aux = primeiro;
 	while (aux != NULL) {
@@ -125,36 +126,122 @@ void inserirElemento()
 	cin >> novo->valor;
 	novo->prox = NULL;
 
-	if (primeiro == NULL)
-	{
+	if (primeiro == NULL) {
 		primeiro = novo;
+		maior = novo;
+	}
+	//checa se o novo valor é igual ao primeiro valor
+	else if (novo->valor == primeiro->valor) {
+		cout << "Elemento Duplicado \n";
+		return;
 	}
 	else 
 	{
 		NO* aux = primeiro;
-		while (aux != NULL) {
+		//checa se o valor é duplicado
+		while (aux->prox != NULL) {
+			aux = aux->prox;
 			if (aux->valor == novo->valor) {
 				cout << "Elemento Duplicado \n";
 				return;
 			}
-			aux = aux->prox;
+		}	
+		//checa se o novo valor é menor que o primeiro e se for, ele vira o primeiro
+		if (novo->valor < primeiro->valor) {
+			novo->prox = primeiro;
+			primeiro = novo;
 		}
-		// procura o final da lista
-		while (aux->prox != NULL) {
-			aux = aux->prox;
+		//checa se o novo valor é maior que o maior valor e então o novo vira o maior
+		else if (novo->valor > maior->valor) {
+			aux->prox = novo;
+			maior = novo;
 		}
-		aux->prox = novo;
+		//se ele for menor que o maior (que não seja o primeiro)
+		else {
+			NO* aux = primeiro->prox;
+			NO* ant = primeiro;
+			while (aux != NULL) {
+				if (aux->valor > novo->valor) {
+					ant->prox = novo;
+					novo->prox = aux;
+					return;
+				}
+				ant = aux;
+				aux = aux->prox;
+			}
+		}
 	}
 }
 
 void excluirElemento()
 {
+	if (primeiro == NULL) {
+		cout << "Lista Vazia \n";
+	}
+	else {
+		int valor = NULL;
+		cout << "Insira o valor que deseja excluir: \n";
+		cin >> valor;
 
+		NO* aux = primeiro->prox;
+		NO* ant = primeiro;
+		NO* paraExcluir = aux;
+
+		if (valor < primeiro->valor || valor > maior->valor) {
+			cout << "VALOR NAO ENCONTRADO \n";
+			return;
+		}
+		else if (primeiro->prox == NULL) {
+			free(primeiro);
+			cout << "Elemento Excluido \n";
+			primeiro = NULL;
+		}
+		else if (valor == primeiro->valor) {
+			primeiro = primeiro->prox;
+			free(ant);
+			cout << "Elemento Excluido \n";
+		}
+		else {
+			while (aux != NULL) {
+				if (valor == aux->valor) {
+					ant->prox = aux->prox;
+					free(paraExcluir);
+					cout << "Elemento Excluido \n";
+					return;
+				}
+				aux = aux->prox;
+			}
+			cout << "VALOR NAO ENCONTRADO \n";
+		}
+	}
 }
 
 void buscarElemento()
 {
+	if (primeiro == NULL) {
+		cout << "Lista Vazia \n";
+	}
+	else {
+		int valor = NULL;
+		cout << "Insira o valor que deseja buscar: \n";
+		cin >> valor;
+
+		NO* aux = primeiro;
+		if (valor < primeiro->valor || valor > maior->valor) {
+			cout << "VALOR NAO ENCONTRADO \n";
+			return;
+		}
+		else {
+			while (aux != NULL) {
+				if (valor == aux->valor) {
+					cout << "VALOR ENCONTRADO \n";
+					return;
+				}
+				aux = aux->prox;
+			}
+			cout << "VALOR NAO ENCONTRADO \n";
+		}
+	}
 
 }
-
 
